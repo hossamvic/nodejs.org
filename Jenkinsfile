@@ -7,27 +7,32 @@ pipeline {
                 checkout scm
             }
         }
-
-        stage('Installation') {
-            steps {
-                // Set up necessary dependencies
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                // Run unit tests
-                sh 'npm test'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                // Build your application
-                 sh 'npm run build'
-            }
-        }
+ stage  ("Install dependeincies") {
+      agent {
+        docker {image 'node:lts-buster-slim'}
+      }
+      steps {
+        sh 'pwd'
+        sh 'ls'
+        sh 'npm install'
+      }
+    }
+    stage ("Test"){
+      agent {
+        docker {image 'node:lts-buster-slim'}
+      }
+      steps{
+        sh 'npm run test'
+      }
+    }
+    stage ("Build"){
+      agent {
+        docker {image 'node:lts-buster-slim'}
+      }
+      steps{
+        sh 'npm run build'
+      }
+    } 
 
         // Add more stages as needed
     }
