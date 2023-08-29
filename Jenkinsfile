@@ -1,16 +1,20 @@
-pipeline { 
-  
-   agent any
+pipeline {
+    agent any
 
-   stages {
-   
-      stage('Install') {
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Installation') {
             steps {
                 sh 'npm install'
             }
         }
 
-        stage('Test') {
+        stage('Run Unit Tests') {
             steps {
                 sh 'npm test'
             }
@@ -18,12 +22,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                 sh 'npm run build'
+                sh 'npm run build'
             }
         }
 
+    }
 
   
-   	}
+}
 
-   }
