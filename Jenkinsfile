@@ -1,20 +1,26 @@
-pipeline { 
-  
-   agent any
+pipeline {
+    agent any
 
-   stages {
-   
-     stage('Install Dependencies') { 
-        steps { 
-           sh 'npm install' 
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
         }
-     }
-     
-     stage('Test') { 
-        steps { 
-           sh 'echo "testing application..."'
+
+        stage('Installation') {
+            steps {
+                // Set up necessary dependencies
+                sh 'npm install'
+            }
         }
-      }
+
+        stage('Run Tests') {
+            steps {
+                // Run unit tests
+                sh 'npm test'
+            }
+        }
 
         stage('Build') {
             steps {
@@ -23,7 +29,7 @@ pipeline {
             }
         }
 
-  
-   	}
+        // Add more stages as needed
+    }
+}
 
-   }
