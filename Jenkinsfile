@@ -2,31 +2,45 @@ pipeline {
     agent any
 
     stages {
-       stage('Checkout') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Installation') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                 sh 'npm run build'
-            }
-        }
-
+    stage  ("Install dependeincies") {
+      agent {
+        docker {image 'node:18'}
+      }
+      steps {
+        sh 'npm install'
+      }
     }
+       stage("Test&Build"){
+            parallel {
+                stage("Test") {
+                  agent {
+        docker {image 'node:18'}
+      }
+                    steps {
+                        sh 'npm run test:unit'
+                    }
+
+                }
+                stage("Build") {
+                   agent {
+        docker {image 'node:18'}
+      }
+                    steps {
+                        sh 'npm run build'
+                    }
+
+                }
+            }
+        }
+
+        // Add more stages for deployment, notifications, etc.
+    }
+
+    // Add post-build actions, notifications, etc.
 }
-
-
